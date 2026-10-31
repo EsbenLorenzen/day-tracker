@@ -6,11 +6,13 @@ Each phase ends with something usable on the iPhone. See [DECISIONS.md](DECISION
 The biggest risk is building and installing an iOS app with no Mac. Retire it first.
 
 - [ ] Create public repo `EsbenLorenzen/day-tracker` on GitHub and push (the `origin` remote is already set locally)
-- [ ] Minimal `project.yml` (XcodeGen) + "Hello" SwiftUI app
-- [ ] GitHub Actions workflow: `xcodegen generate` → build → unsigned `.ipa` artifact
-- [ ] Install Sideloadly on Windows (+ iTunes/iCloud from apple.com, not the Microsoft Store versions)
+- [x] Minimal `project.yml` (XcodeGen) + "Hello" SwiftUI app *(written; not yet compiled)*
+- [x] GitHub Actions workflow `.github/workflows/ios.yml`: `xcodegen generate` → build → unsigned `.ipa` artifact *(written; not yet run)*
+- [ ] First green CI run
+- [ ] Install Sideloadly on Windows (+ iTunes/iCloud from apple.com, not the Microsoft Store versions). See [SIDELOADING.md](SIDELOADING.md)
 - [ ] Sideload the IPA with a free Apple ID; trust the developer profile on the iPhone; enable Developer Mode
-- [ ] Add a button that schedules a local notification 10 s later, and check it fires on the phone
+- [x] Button that schedules a local notification 10 s later *(written)*
+- [ ] Notification verified on the phone
 
 **Done when:** the app icon is on the phone and a test notification arrives.
 

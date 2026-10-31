@@ -14,10 +14,10 @@ A personal native iOS app (Swift/SwiftUI) for tracking daily things (medication,
 - [Decisions](docs/DECISIONS.md): what was chosen and why
 - [Architecture](docs/ARCHITECTURE.md): layout, data model, notifications, export format
 
-## Dev loop (planned)
+## Dev loop
 1. Edit Swift code on Windows (VS Code + Swift extension for syntax highlighting).
-2. Push → GitHub Actions builds, tests and uploads `DayTracker-unsigned.ipa`.
-3. Download the artifact → Sideloadly → iPhone.
+2. Push → GitHub Actions ([ios.yml](.github/workflows/ios.yml)) builds and uploads `DayTracker-unsigned.ipa`.
+3. Download the artifact → Sideloadly → iPhone. Step by step: [docs/SIDELOADING.md](docs/SIDELOADING.md).
 
 ## Analysis setup
 ```powershell
