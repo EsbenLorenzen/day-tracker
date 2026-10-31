@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Personal data exported from the phone — never commit
+analysis/data/
+*.csv
+*.daytracker.json
+
+# Xcode / Swift (generated on CI, but in case)
+*.xcodeproj/
+*.xcworkspace/
+DerivedData/
+build/
+.build/
+.swiftpm/
+*.ipa
+*.xcarchive
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

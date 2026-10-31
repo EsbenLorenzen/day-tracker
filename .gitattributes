@@ -1,0 +1,4 @@
+# Keep LF everywhere; files are built on macOS CI
+* text=auto eol=lf
+*.png binary
+*.jpg binary
