@@ -35,7 +35,7 @@ daytracker/
 | icon, color | String | SF Symbol name, color token |
 | sortOrder, archived | Int, Bool | archive instead of delete so history stays intact |
 
-### Entry — *something that happened*
+### Entry (`LogEntry` in code) — *something that happened*
 | field | type | notes |
 |---|---|---|
 | id | UUID | |

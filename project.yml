@@ -13,12 +13,18 @@ settings:
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"  # CI overrides with the run number
 
+packages:
+  DayTrackerCore:
+    path: Packages/DayTrackerCore  # D10
+
 targets:
   DayTracker:
     type: application
     platform: iOS
     sources:
       - App
+    dependencies:
+      - package: DayTrackerCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.esbenlorenzen.daytracker

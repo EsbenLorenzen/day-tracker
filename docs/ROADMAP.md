@@ -5,10 +5,12 @@ Each phase ends with something usable on the iPhone. See [DECISIONS.md](DECISION
 ## Phase 0: Prove the toolchain (no features)
 The biggest risk is building and installing an iOS app with no Mac. Retire it first.
 
-- [ ] Create public repo `EsbenLorenzen/day-tracker` on GitHub and push (the `origin` remote is already set locally)
-- [x] Minimal `project.yml` (XcodeGen) + "Hello" SwiftUI app *(written; not yet compiled)*
-- [x] GitHub Actions workflow `.github/workflows/ios.yml`: `xcodegen generate` → build → unsigned `.ipa` artifact *(written; not yet run)*
-- [ ] First green CI run
+- [x] Create public repo `EsbenLorenzen/day-tracker` and push
+- [x] Minimal `project.yml` (XcodeGen) + "Hello" SwiftUI app
+- [x] GitHub Actions workflow `.github/workflows/ios.yml`: `xcodegen generate` → build → unsigned `.ipa` artifact
+- [x] First green CI run (2026-11-02)
+
+*Sideloading and the on-device checks below are deferred. They'll be done alongside a later phase; CI keeps verifying that the code compiles.*
 - [ ] Install Sideloadly on Windows (+ iTunes/iCloud from apple.com, not the Microsoft Store versions). See [SIDELOADING.md](SIDELOADING.md)
 - [ ] Sideload the IPA with a free Apple ID; trust the developer profile on the iPhone; enable Developer Mode
 - [x] Button that schedules a local notification 10 s later *(written)*
@@ -17,12 +19,14 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 **Done when:** the app icon is on the phone and a test notification arrives.
 
 ## Phase 1: Manual logging (MVP)
-- [ ] SwiftData models: `Tracker`, `Entry` (seeded with Water, Coffee, one example medicine, Mood, Energy, Focus)
-- [ ] Today screen with one-tap logging and daily totals; medicine "Taken" button for as-needed use
-- [ ] Mood, Energy and Focus on a 1–10 scale (2×5 button grid)
-- [ ] History list grouped by day; edit, delete, backfill a time
-- [ ] CI: unit tests for the model and day-boundary logic
-- [ ] Decide D10 (core package / Swift on Windows)
+- [x] SwiftData models: `Tracker`, `LogEntry` (seeded with Water, Coffee, one example medicine, Mood, Energy, Focus)
+- [x] Today screen with one-tap logging and daily totals; medicine "Taken" button for as-needed use; undo last
+- [x] Mood, Energy and Focus on a 1–10 scale (2×5 button grid)
+- [x] History list grouped by day (04:00 boundary, D14); edit, delete, backfill a time
+- [x] CI: `DayTrackerCore` tests on Linux (day boundary incl. DST, aggregation, formatting, default trackers)
+- [x] Decide D10 → core package accepted; no Swift-on-Windows for now
+- [ ] Green CI run for Phase 1
+- [ ] Try it on the phone (with the deferred Phase 0 sideload)
 
 **Done when:** you can log your whole day by hand for a week.
 
@@ -64,9 +68,9 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 ---
 
 ## Open questions
-1. Count water in glasses or ml? Coffee in cups or mg caffeine? (Default for now: glasses and cups, each tap = 1.)
+None right now.
 
-Resolved on 2026-10-31: iOS 27 phone → D05 · public repo → D02 · medication → D11 · 1–10 scales + Focus → D12 · check-in times → D13
+Resolved: iOS 27 phone → D05 · public repo → D02 · medication → D11 · 1–10 scales + Focus → D12 · check-in times → D13 · glasses/cups → D15
 
 ## Risks
 | Risk | Mitigation |

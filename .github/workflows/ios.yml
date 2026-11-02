@@ -14,6 +14,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  core-tests:
+    # Pure Swift logic, tested on cheap/fast Linux (D10).
+    runs-on: ubuntu-latest
+    container: swift:6.2
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run DayTrackerCore tests
+        run: swift test --package-path Packages/DayTrackerCore
+
   build:
     runs-on: macos-26
     timeout-minutes: 30

@@ -102,11 +102,11 @@ Simple charts in the app (Swift Charts) come later. Serious analysis stays in Py
 ---
 
 ## D10 — Pure-Swift core package
-**Status:** Proposed
+**Status:** Accepted (2026-11-02)
 
-**Idea:** Keep domain logic that doesn't depend on SwiftUI or SwiftData in a local Swift package (`DayTrackerCore`): schedule calculations, export formatting, adherence and streak calculations. It can then be unit-tested on CI cheaply (Linux runner) and possibly on Windows with the Swift for Windows toolchain, without spending macOS minutes.
+**Decision:** Domain logic that doesn't depend on SwiftUI or SwiftData lives in the local package `Packages/DayTrackerCore`: day boundaries, aggregation, value formatting and default trackers, later schedules and export. The app depends on it through `project.yml`. Its tests (Swift Testing) run in a `swift` container on an Ubuntu runner, which is fast and needs no Mac.
 
-**Open:** Is installing Swift on Windows worth it for local tests? Decide in Phase 1.
+**Not now:** Installing the Swift toolchain on Windows for local test runs. It's a heavy install (needs Visual Studio build tools), and CI covers it. Revisit if the feedback loop gets painful.
 
 ---
 
@@ -134,3 +134,22 @@ Simple charts in the app (Swift Charts) come later. Serious analysis stays in Py
 **Status:** Accepted (2026-10-31)
 
 **Decision:** First launch creates three check-in schedules (Morning 09:00, Afternoon 14:00, Evening 21:00, every day), each asking Mood, Energy and Focus. Times, weekdays, questions and on/off can all be changed in Settings, and schedules can be added or removed.
+
+---
+
+## D14 — A "day" runs from 04:00 to 04:00
+**Status:** Accepted (2026-11-02)
+
+**Decision:** For grouping (Today screen, History, daily totals), a day starts at **04:00 local time**, not midnight. A coffee at 01:30 or a mood rating before bed at 00:45 counts towards the evening before, which matches how the day was actually lived.
+
+**Notes:** Entries always store the exact `occurredAt` timestamp, so analysis can regroup with any boundary. On DST-change nights a day is 23 or 25 hours long, and `DayBoundary` handles that (tested). The start hour could become a setting later.
+
+---
+
+## D15 — Phase 1 scope details
+**Status:** Accepted (2026-11-02)
+
+- Fluid intake counts **glasses** (water) and **cups** (coffee), one per tap.
+- Seeded trackers: Water, Coffee, one example "Medicine", Mood, Energy, Focus. Renaming and adding trackers come in Phase 4.
+- The stored model class is `LogEntry` (not `Entry`) to avoid confusion with SwiftUI's `@Entry` macro.
+- No `VersionedSchema` yet. SwiftData migrates additive changes (new optional fields) automatically. Introduce versioning before the first non-additive change.
