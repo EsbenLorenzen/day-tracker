@@ -59,8 +59,11 @@ struct CounterCard: View {
             .accessibilityLabel("Add \(tracker.unit ?? "one") of \(tracker.name.lowercased())")
         }
         .card()
-        .sensoryFeedback(.increase, trigger: entries.count)
+        .sensoryFeedback(.increase, trigger: entryCount)
     }
+
+    // Explicit Int: `trigger:` is generic, so a bare `entries.count` is ambiguous.
+    private var entryCount: Int { entries.count }
 }
 
 /// Medicine: "Taken" button and today's intake times (D11, as-needed use).
@@ -105,8 +108,10 @@ struct DoseCard: View {
                 }
             }
         }
-        .sensoryFeedback(.success, trigger: taken.count)
+        .sensoryFeedback(.success, trigger: takenCount)
     }
+
+    private var takenCount: Int { taken.count }
 }
 
 /// Mood, energy, focus: latest rating today; tap to rate.
