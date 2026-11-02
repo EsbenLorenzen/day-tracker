@@ -35,8 +35,8 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Install XcodeGen
-        run: brew install xcodegen
+      - name: Install XcodeGen and xcbeautify
+        run: brew install xcodegen xcbeautify
 
       - name: Generate Xcode project
         run: xcodegen generate
@@ -54,7 +54,8 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            build
+            build \
+            | xcbeautify --renderer github-actions  # compiler errors become annotations, readable via the API
 
       - name: Package IPA
         run: |
