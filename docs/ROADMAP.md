@@ -25,7 +25,7 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] History list grouped by day (04:00 boundary, D14); edit, delete, backfill a time
 - [x] CI: `DayTrackerCore` tests on Linux (day boundary incl. DST, aggregation, formatting, default trackers)
 - [x] Decide D10 → core package accepted; no Swift-on-Windows for now
-- [ ] Green CI run for Phase 1
+- [x] Green CI run for Phase 1 (2026-11-02)
 - [ ] Try it on the phone (with the deferred Phase 0 sideload)
 
 **Done when:** you can log your whole day by hand for a week.
