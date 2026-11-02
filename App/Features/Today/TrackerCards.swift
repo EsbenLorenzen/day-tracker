@@ -48,7 +48,7 @@ struct CounterCard: View {
                 .contentTransition(.numericText())
             Button {
                 withAnimation {
-                    EntryLogger.log(tracker, value: tracker.defaultAmount, in: context)
+                    _ = EntryLogger.log(tracker, value: tracker.defaultAmount, in: context)
                 }
             } label: {
                 Label("Add", systemImage: "plus")
@@ -93,7 +93,7 @@ struct DoseCard: View {
             Spacer()
             Button("Taken") {
                 withAnimation {
-                    EntryLogger.log(tracker, value: 1, in: context)
+                    _ = EntryLogger.log(tracker, value: 1, in: context)
                 }
             }
             .buttonStyle(.borderedProminent)
