@@ -38,7 +38,7 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] Medicine reminder times per medicine; notifications with **Taken / Skip / Snooze** actions (no app open needed)
 - [x] Missed / partial session tracking (D16)
 - [x] Permission asked from a Today banner, not at first launch
-- [ ] Green CI run for Phase 2
+- [x] Green CI run for Phase 2 (2026-11-03)
 - [ ] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
 
 **Done when:** the phone asks you 2–3 times a day and answering takes under 10 seconds.
