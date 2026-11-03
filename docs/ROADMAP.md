@@ -40,7 +40,7 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] Permission asked from a Today banner, not at first launch
 - [x] Green CI run for Phase 2 (2026-11-03)
 - [ ] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
-- [ ] **Bug:** tapping a notification on the lock screen opens the app briefly, then it closes (crash, 2026-11-03). Waiting for the crash report
+- [x] **Bug:** tapping a notification opened the app briefly, then it crashed (2026-11-03). The delegate ran off the main thread, so UIKit aborted when opening the app; it now runs on the main actor
 
 **Done when:** the phone asks you 2–3 times a day and answering takes under 10 seconds.
 

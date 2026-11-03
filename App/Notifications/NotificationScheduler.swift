@@ -63,7 +63,7 @@ enum NotificationScheduler {
     }
 
     /// Re-delivers the same notification in 15 minutes, pinned to its original slot.
-    nonisolated static func snooze(_ original: UNNotificationContent, slot: Date) async {
+    static func snooze(_ original: UNNotificationContent, slot: Date) async {
         guard let content = original.mutableCopy() as? UNMutableNotificationContent else { return }
         content.userInfo[NotificationPayload.Key.scheduledFor] = slot.timeIntervalSince1970
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: snoozeInterval, repeats: false)

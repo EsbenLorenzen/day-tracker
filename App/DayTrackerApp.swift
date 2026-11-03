@@ -18,7 +18,10 @@ struct DayTrackerApp: App {
     }
 }
 
-final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+// The delegate methods run on the main actor: iOS calls them on the main thread and requires the
+// completion (when the async method returns) on the main thread too, or opening the app from a
+// notification aborts in UIKit. @preconcurrency lets main-actor methods satisfy the protocol.
+final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUserNotificationCenterDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
@@ -29,7 +32,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     }
 
     // Show notifications as banners even while the app is open.
-    nonisolated func userNotificationCenter(
+    func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
@@ -37,7 +40,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     }
 
     // Taps and action buttons. May run with the app in the background (Taken / Skip / Snooze).
-    nonisolated func userNotificationCenter(
+    func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
@@ -50,6 +53,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             await NotificationScheduler.snooze(content, slot: slot)
             return
         }
-        await NotificationHandler.handle(action: action, payload: payload, slot: slot)
+        NotificationHandler.handle(action: action, payload: payload, slot: slot)
     }
 }
