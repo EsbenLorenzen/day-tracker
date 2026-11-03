@@ -7,6 +7,8 @@ __pycache__/
 # Personal data exported from the phone — never commit
 analysis/data/
 *.csv
+# ...except the synthetic export-format fixtures shared by Swift and Python tests
+!Packages/DayTrackerCore/Tests/DayTrackerCoreTests/Fixtures/*.csv
 *.daytracker.json
 
 # Xcode / Swift (generated on CI, but in case)

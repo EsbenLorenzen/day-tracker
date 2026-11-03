@@ -72,15 +72,21 @@ This lets analysis measure response rate and latency, and separate "no coffee" f
 - Notification permission is requested from a banner on the Today screen, not at first launch.
 - Code: `App/Notifications/` (scheduler, payload, handler); scheduling math in `DayTrackerCore` (`RecurringTime`, `NotificationPlanner`, `CheckInPolicy`).
 
-## Export format (D09)
+## Export format (D09, D17)
 
-Share sheet → `.zip` containing:
+Settings → Data → Export all data → share sheet with `DayTracker-<yyyy-MM-dd-HHmm>.zip` containing:
 
-- `entries.csv` (long/tidy, one row per entry):
-  `entry_id, tracker_id, tracker_name, kind, value, unit, occurred_at, logged_at, time_zone, source, session_id, scheduled_for, note`
-  Timestamps are ISO 8601 with offset.
-- `trackers.csv`, `sessions.csv`
-- `backup.daytracker.json`: full-fidelity dump, used for re-import or restore after reinstalling (important while sideloading).
+- `entries.csv` (long/tidy, one row per entry, oldest first):
+  `entry_id, tracker_id, tracker_name, kind, value, unit, occurred_at, logged_at, time_zone, day, source, session_id, scheduled_for, note`
+  Timestamps are ISO 8601 in the entry's own time zone with offset (`2026-11-02T09:00:00+01:00`). `day` is `yyyy-MM-dd` using the 04:00 boundary (D14).
+- `trackers.csv`: `tracker_id, name, kind, unit, unit_plural, scale_min, scale_max, icon, color, sort_order, archived, reminder_times` (`08:00;20:00`)
+- `checkins.csv`: `session_id, schedule_id, schedule_name, scheduled_for, day, status, question_count, answered_count, opened_at, completed_at`
+- `backup.json`: full-fidelity `Backup` (version 1), used by Import.
+- `README.txt`
+
+The exact format is pinned by `Packages/DayTrackerCore/Tests/DayTrackerCoreTests/Fixtures/*.csv`. The Swift exporter must reproduce those files byte for byte, and `analysis/tests` loads the same files. Change both sides together.
+
+Code: `DayTrackerCore` (`Backup`, `Exporter`, `StoredZip`); app `App/Data/` (model ↔ record mapping, import merge); `analysis/daytracker.py`.
 
 ## Screens (MVP)
 

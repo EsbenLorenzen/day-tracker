@@ -10,6 +10,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "DayTrackerCore"),
-        .testTarget(name: "DayTrackerCoreTests", dependencies: ["DayTrackerCore"]),
+        // Fixtures are shared with the Python tests in analysis/ and read via #filePath.
+        .testTarget(name: "DayTrackerCoreTests", dependencies: ["DayTrackerCore"], exclude: ["Fixtures"]),
     ]
 )

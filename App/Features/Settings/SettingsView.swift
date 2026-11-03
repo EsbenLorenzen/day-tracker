@@ -16,6 +16,8 @@ struct SettingsView: View {
 
                 MedicinesSection()
 
+                DataSection()
+
                 Section {
                     Button("Send test notification in 10 s") {
                         Task { testStatus = await NotificationTester.scheduleTest() }

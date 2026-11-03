@@ -1,0 +1,24 @@
+# Python analysis tests (D09). Runs against the same export fixtures as the Swift exporter tests (D17).
+name: Analysis tests
+
+on:
+  push:
+    branches: [main]
+    paths: ["analysis/**", "Packages/DayTrackerCore/Tests/DayTrackerCoreTests/Fixtures/**", ".github/workflows/analysis.yml"]
+  pull_request:
+    paths: ["analysis/**", "Packages/DayTrackerCore/Tests/DayTrackerCoreTests/Fixtures/**", ".github/workflows/analysis.yml"]
+  workflow_dispatch:
+
+jobs:
+  analysis-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pandas pytest
+      - name: Run tests
+        run: pytest -q analysis

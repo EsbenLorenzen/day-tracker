@@ -22,7 +22,12 @@ A personal native iOS app (Swift/SwiftUI) for tracking daily things (medication,
 ## Analysis setup
 ```powershell
 .\.venv\Scripts\Activate.ps1
-pip install -r analysis\requirements.txt
-jupyter lab
+pip install -r analysisequirements.txt
+cd analysis
+jupyter lab starter.ipynb
 ```
-Put exported files in `analysis/data/` (gitignored, so personal data never gets committed).
+1. In the app: **Settings → Data → Export all data**, save the `.zip` to Files / iCloud Drive or email it to yourself.
+2. Put it in `analysis/data/` (gitignored, so personal data never gets committed).
+3. Run the notebook; `daytracker.load()` picks the newest export. Format details: [ARCHITECTURE.md](docs/ARCHITECTURE.md#export-format-d09-d17).
+
+Tests: `python -m pytest analysis`.

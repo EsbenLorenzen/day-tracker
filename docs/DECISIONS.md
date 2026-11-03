@@ -166,3 +166,15 @@ Simple charts in the app (Swift Charts) come later. Serious analysis stays in Py
 - **Rebuild, don't patch.** All repeating requests are removed and re-added from the current settings on launch, on returning to the app, and after every settings change. Snoozes are kept. The total stays under iOS's 64-pending cap, with a little room left for snoozes.
 - **Permission** is requested from a banner on Today (and a Settings row), not by a system prompt at first launch.
 - Check-in notifications carry only *Snooze*. Ten mood buttons don't fit on a notification (D12), so tapping opens the check-in sheet.
+
+---
+
+## D17 — Export file, backup and import
+**Status:** Accepted (2026-11-04)
+
+- **One `.zip` per export**, shared through the iOS share sheet: three tidy CSVs for analysis, `backup.json`, and a README. It's written by our own minimal ZIP writer (stored, uncompressed, about 150 lines in `DayTrackerCore`) rather than a third-party library. The files are small, and Windows, Python's `zipfile` and iOS Files all open it.
+- **Times keep their time zone.** CSV timestamps are ISO 8601 in the entry's own time zone with offset, so "hour of day" means what the clock showed then. A precomputed `day` column applies the 04:00 boundary (D14), so Python doesn't need to reimplement it.
+- **One format contract, tested on both sides.** Fixture CSVs in the core test target must be reproduced exactly by the Swift exporter (Linux CI) and are loaded by the Python tests (Analysis CI).
+- **`backup.json`** is a versioned (`version: 1`) Codable dump of all models. Dates are in ISO 8601 at second precision. Readers reject newer versions.
+- **Import merges, it never replaces.** Entries and check-in records are added if their ID is missing. Existing trackers and schedules are kept as they are, so local edits win. To avoid duplicates on a fresh install, an unused default tracker (same name and kind, no entries) or default check-in (same name and time) takes over the backed-up item's ID. Import accepts the export `.zip` or `backup.json`; a re-compressed `.zip` gets a clear "unzip it first" message.
+- **Analysis** lives in `analysis/daytracker.py`, with functions returning DataFrames (`daily`, `by_hour`, `by_weekday`, `last_coffee_vs_evening`, `adherence`, `checkin_summary`) plus `starter.ipynb`. Renamed trackers are grouped by `tracker_id` under their current name.

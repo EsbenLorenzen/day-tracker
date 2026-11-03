@@ -1,0 +1,5 @@
+tracker_id,name,kind,unit,unit_plural,scale_min,scale_max,icon,color,sort_order,archived,reminder_times
+00000000-0000-0000-0000-000000000001,Water,counter,glass,glasses,,,drop.fill,blue,0,false,
+00000000-0000-0000-0000-000000000002,Coffee,counter,cup,cups,,,cup.and.saucer.fill,brown,1,false,
+00000000-0000-0000-0000-000000000003,Vitamin D,dose,,,,,pills.fill,red,2,false,08:00
+00000000-0000-0000-0000-000000000004,Energy,scale,,,1,10,bolt.fill,orange,3,false,

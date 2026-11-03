@@ -39,7 +39,7 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] Missed / partial session tracking (D16)
 - [x] Permission asked from a Today banner, not at first launch
 - [x] Green CI run for Phase 2 (2026-11-03)
-- [ ] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
+- [x] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
 - [x] **Bug:** tapping a notification opened the app briefly, then it crashed (2026-11-03). The delegate ran off the main thread, so UIKit aborted when opening the app; it now runs on the main actor
 
 **Done when:** the phone asks you 2–3 times a day and answering takes under 10 seconds.
@@ -51,15 +51,19 @@ Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing beca
 - [x] Replace the seeded placeholder "Medicine" by renaming it on its page, without losing its history
 - [x] Entries reference medicines by tracker ID, so renaming doesn't split the data (export in Phase 3 uses `tracker_id`)
 - [x] Green CI run for Phase 2.5 (2026-11-03)
-- [ ] On the phone: add a second medicine with a reminder; both cards on Today; rename "Medicine"; notification-tap crash fix confirmed
+- [x] On the phone: add a second medicine with a reminder; both cards on Today; rename "Medicine"; notification-tap crash fix confirmed (2026-11-04)
 
 **Done when:** each of your medicines has its own card, reminders and adherence.
 
 ## Phase 3: Export & analysis
-- [ ] Export zip (CSV + JSON backup) via the share sheet
-- [ ] Import from JSON backup (protects against data loss when sideloading or reinstalling)
-- [ ] `analysis/`: loader module + starter notebook
-- [ ] First questions: caffeine timing vs. evening energy; mood by time of day and weekday; medication adherence; water vs. energy
+- [x] Export zip (CSV + JSON backup) via the share sheet (D17)
+- [x] Import from the export zip or `backup.json`: merges, never deletes (protects against data loss when sideloading or reinstalling)
+- [x] `analysis/`: `daytracker.py` loader + `starter.ipynb` (smoke-tested against fixture data)
+- [x] First questions: caffeine timing vs. evening energy; ratings by time of day and weekday; medication adherence; water vs. energy; check-in response rate
+- [x] Format contract: shared fixtures tested by Swift (Linux CI) and Python (Analysis CI)
+- [ ] Green CI run for Phase 3
+- [ ] On the phone: export → save to Files/iCloud → open on PC; import the same file reports "Nothing new"
+- [ ] A week of real data through the notebook
 
 **Done when:** a week of real data turns into charts on the PC.
 
