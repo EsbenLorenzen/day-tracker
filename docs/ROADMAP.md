@@ -50,7 +50,7 @@ Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing beca
 - [x] Each medicine has its own reminder times, notifications and Today card (the model already supports this, D11)
 - [x] Replace the seeded placeholder "Medicine" by renaming it on its page, without losing its history
 - [x] Entries reference medicines by tracker ID, so renaming doesn't split the data (export in Phase 3 uses `tracker_id`)
-- [ ] Green CI run for Phase 2.5
+- [x] Green CI run for Phase 2.5 (2026-11-03)
 - [ ] On the phone: add a second medicine with a reminder; both cards on Today; rename "Medicine"; notification-tap crash fix confirmed
 
 **Done when:** each of your medicines has its own card, reminders and adherence.
