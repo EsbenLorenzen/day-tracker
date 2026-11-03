@@ -40,8 +40,18 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] Permission asked from a Today banner, not at first launch
 - [x] Green CI run for Phase 2 (2026-11-03)
 - [ ] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
+- [ ] **Bug:** tapping a notification on the lock screen opens the app briefly, then it closes (crash, 2026-11-03). Waiting for the crash report
 
 **Done when:** the phone asks you 2–3 times a day and answering takes under 10 seconds.
+
+## Phase 2.5: Several medicines
+Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing because it's needed for real daily use.
+- [ ] Settings → Medicines: add a medicine (name, optional icon/colour), rename, reorder, archive (history kept)
+- [ ] Each medicine has its own reminder times, notifications and Today card (the model already supports this, D11)
+- [ ] Replace the seeded placeholder "Medicine" by renaming it, without losing its history
+- [ ] Analysis/export keeps medicines apart by tracker ID, so renaming doesn't split the data
+
+**Done when:** each of your medicines has its own card, reminders and adherence.
 
 ## Phase 3: Export & analysis
 - [ ] Export zip (CSV + JSON backup) via the share sheet
@@ -52,7 +62,7 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 **Done when:** a week of real data turns into charts on the PC.
 
 ## Phase 4: Daily-driver polish
-- [ ] Add, edit and archive trackers in the app (no code changes needed): new medicines, new 1–10 states like stress, new counters
+- [ ] Add, edit and archive other trackers in the app (no code changes needed): new 1–10 states like stress, new counters (medicines come earlier, Phase 2.5)
 - [ ] Simple in-app charts (Swift Charts): 7- and 30-day trends
 - [ ] App icon, haptics, dark mode check, accessibility (Dynamic Type)
 - [ ] **Decision point:** join the Apple Developer Program → signed CI builds → TestFlight (ends the 7-day expiry)
