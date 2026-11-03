@@ -4,7 +4,11 @@ Uses a free Apple ID (D04). The app has to be re-signed **every 7 days**.
 
 ## One-time setup
 
-1. **iTunes and iCloud for Windows**: install the versions from apple.com, *not* the Microsoft Store versions. Sideloadly needs their drivers.
+1. **iTunes and iCloud for Windows, web versions**, *not* the Microsoft Store versions. Sideloadly needs their drivers. Apple's pages now redirect to the Store, so use these direct installers (as linked from sideloadly.io):
+   - iTunes 64-bit: <https://www.apple.com/itunes/download/win64>
+   - iCloud (2020 web installer): <https://updates.cdn-apple.com/2020/windows/001-39935-20200911-1A70AA56-F448-11EA-8CC0-99D41950005E/iCloudSetup.exe>
+
+   Uninstall any Microsoft Store iTunes/iCloud first, then restart the PC after installing. If Sideloadly reports *no devices detected*, reinstall these two and reboot.
 2. **Sideloadly**: download from <https://sideloadly.io> and install.
 3. Connect the iPhone by USB, unlock it, and tap **Trust This Computer**.
 4. **Developer Mode** on the iPhone: Settings → Privacy & Security → Developer Mode → On, then restart. It only appears after the first sideload attempt, so you may have to come back to this step.
