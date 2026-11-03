@@ -14,7 +14,7 @@ struct SettingsView: View {
 
                 CheckInSchedulesSection { editingSchedule = $0 }
 
-                MedicineRemindersSection()
+                MedicinesSection()
 
                 Section {
                     Button("Send test notification in 10 s") {
@@ -131,32 +131,29 @@ private struct CheckInSchedulesSection: View {
     }
 }
 
-private struct MedicineRemindersSection: View {
+private struct MedicinesSection: View {
     @Query(filter: #Predicate<Tracker> { $0.archived == false }, sort: \Tracker.sortOrder)
     private var trackers: [Tracker]
 
     var body: some View {
-        let doses = trackers.filter { $0.kind == .dose }
-        if !doses.isEmpty {
-            Section {
-                ForEach(doses) { tracker in
-                    NavigationLink {
-                        MedicineRemindersView(tracker: tracker)
-                    } label: {
-                        LabeledContent {
-                            Text(tracker.reminderTimes.isEmpty
-                                 ? "As needed"
-                                 : tracker.reminderTimes.map(\.display).joined(separator: ", "))
-                        } label: {
-                            Label(tracker.name, systemImage: tracker.icon)
-                        }
-                    }
+        let medicines = trackers.filter { $0.kind == .dose }
+        Section {
+            ForEach(medicines) { tracker in
+                NavigationLink {
+                    MedicineDetailView(tracker: tracker)
+                } label: {
+                    MedicineRow(tracker: tracker)
                 }
-            } header: {
-                Text("Medicine reminders")
-            } footer: {
-                Text("Reminders have Taken, Skip and Snooze buttons right on the notification.")
             }
+            NavigationLink {
+                MedicinesView()
+            } label: {
+                Label("Add, reorder or archive", systemImage: "list.bullet")
+            }
+        } header: {
+            Text("Medicines")
+        } footer: {
+            Text("Tap a medicine to rename it or set its reminder times.")
         }
     }
 }

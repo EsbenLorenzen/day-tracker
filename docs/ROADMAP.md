@@ -46,10 +46,12 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 
 ## Phase 2.5: Several medicines
 Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing because it's needed for real daily use.
-- [ ] Settings → Medicines: add a medicine (name, optional icon/colour), rename, reorder, archive (history kept)
-- [ ] Each medicine has its own reminder times, notifications and Today card (the model already supports this, D11)
-- [ ] Replace the seeded placeholder "Medicine" by renaming it, without losing its history
-- [ ] Analysis/export keeps medicines apart by tracker ID, so renaming doesn't split the data
+- [x] Settings → Medicines: add a medicine (name, icon, colour), rename, reorder, archive/restore (history kept); delete only when it has no history
+- [x] Each medicine has its own reminder times, notifications and Today card (the model already supports this, D11)
+- [x] Replace the seeded placeholder "Medicine" by renaming it on its page, without losing its history
+- [x] Entries reference medicines by tracker ID, so renaming doesn't split the data (export in Phase 3 uses `tracker_id`)
+- [ ] Green CI run for Phase 2.5
+- [ ] On the phone: add a second medicine with a reminder; both cards on Today; rename "Medicine"; notification-tap crash fix confirmed
 
 **Done when:** each of your medicines has its own card, reminders and adherence.
 

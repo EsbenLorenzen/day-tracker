@@ -14,9 +14,17 @@ enum AppConfig {
     }
 }
 
-extension Tracker {
-    var color: Color {
-        switch colorName {
+/// Color tokens stored on trackers, and the choices offered in pickers.
+enum TrackerPalette {
+    static let colorNames = ["red", "orange", "yellow", "green", "mint", "teal",
+                             "blue", "indigo", "purple", "pink", "brown", "gray"]
+
+    static let medicineIcons = ["pills.fill", "pill.fill", "cross.case.fill", "syringe.fill",
+                                "bandage.fill", "drop.fill", "heart.fill", "leaf.fill",
+                                "sun.max.fill", "moon.fill", "bolt.fill", "staroflife.fill"]
+
+    static func color(named name: String) -> Color {
+        switch name {
         case "blue": .blue
         case "brown": .brown
         case "red": .red
@@ -32,6 +40,10 @@ extension Tracker {
         default: .accentColor
         }
     }
+}
+
+extension Tracker {
+    var color: Color { TrackerPalette.color(named: colorName) }
 }
 
 extension Date {
