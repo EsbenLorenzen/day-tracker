@@ -38,19 +38,27 @@ enum NotificationScheduler {
         let status = await authorizationStatus()
         guard status == .authorized || status == .provisional else { return }
 
-        let requests = plannedRequests(in: Persistence.container.mainContext)
-        await replacePending(with: requests)
+        let planned = plannedRequests(in: Persistence.container.mainContext)
+        await replacePending(with: planned)
     }
 
-    /// Runs off the main actor so the (non-Sendable) requests never cross isolation per item.
-    nonisolated private static func replacePending(with requests: [UNNotificationRequest]) async {
+    /// Sendable description of one reminder; turned into a `UNNotificationRequest` off the main actor.
+    private struct PlannedRequest: Sendable {
+        let trigger: PlannedTrigger
+        let title: String
+        let body: String
+        let category: String
+        let payload: NotificationPayload
+    }
+
+    nonisolated private static func replacePending(with planned: [PlannedRequest]) async {
         let center = UNUserNotificationCenter.current()
         let stale = await center.pendingNotificationRequests()
             .map(\.identifier)
             .filter { !$0.hasPrefix(snoozePrefix) }
         center.removePendingNotificationRequests(withIdentifiers: stale)
-        for request in requests {
-            try? await center.add(request)
+        for item in planned {
+            try? await center.add(request(for: item))
         }
     }
 
@@ -64,10 +72,10 @@ enum NotificationScheduler {
         try? await UNUserNotificationCenter.current().add(request)
     }
 
-    private static func plannedRequests(in context: ModelContext) -> [UNNotificationRequest] {
+    private static func plannedRequests(in context: ModelContext) -> [PlannedRequest] {
         let schedules = ((try? context.fetch(FetchDescriptor<CheckInSchedule>())) ?? []).filter(\.enabled)
         let trackers = ((try? context.fetch(FetchDescriptor<Tracker>())) ?? []).filter { !$0.archived }
-        var requests: [UNNotificationRequest] = []
+        var planned: [PlannedRequest] = []
 
         for schedule in schedules {
             let names = schedule.trackerIDs.compactMap { id in trackers.first { $0.id == id }?.name }
@@ -78,9 +86,9 @@ enum NotificationScheduler {
                 kind: .checkIn, targetID: schedule.id, minutes: schedule.time.minutesSinceMidnight)
             for trigger in NotificationPlanner.triggers(
                 idPrefix: "checkin.\(schedule.id.uuidString)", recurring: schedule.recurring) {
-                requests.append(request(trigger, content: content(
-                    title: "\(schedule.name) check-in", body: body,
-                    category: NotificationCategory.checkIn, payload: payload)))
+                planned.append(PlannedRequest(
+                    trigger: trigger, title: "\(schedule.name) check-in", body: body,
+                    category: NotificationCategory.checkIn, payload: payload))
             }
         }
 
@@ -91,37 +99,33 @@ enum NotificationScheduler {
                 for trigger in NotificationPlanner.triggers(
                     idPrefix: "dose.\(tracker.id.uuidString).\(time.minutesSinceMidnight)",
                     recurring: RecurringTime(time: time)) {
-                    requests.append(request(trigger, content: content(
-                        title: tracker.name, body: "Time to take \(tracker.name.lowercased()).",
-                        category: NotificationCategory.dose, payload: payload)))
+                    planned.append(PlannedRequest(
+                        trigger: trigger, title: tracker.name,
+                        body: "Time to take \(tracker.name.lowercased()).",
+                        category: NotificationCategory.dose, payload: payload))
                 }
             }
         }
 
         // Leave a little room under iOS's limit for snoozed copies.
-        return Array(requests.prefix(NotificationPlanner.pendingLimit - 4))
+        return Array(planned.prefix(NotificationPlanner.pendingLimit - 4))
     }
 
-    private static func content(
-        title: String, body: String, category: String, payload: NotificationPayload
-    ) -> UNMutableNotificationContent {
+    nonisolated private static func request(for item: PlannedRequest) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
+        content.title = item.title
+        content.body = item.body
         content.sound = .default
-        content.categoryIdentifier = category
-        content.threadIdentifier = category
-        content.userInfo = payload.userInfo
-        return content
-    }
+        content.categoryIdentifier = item.category
+        content.threadIdentifier = item.category
+        content.userInfo = item.payload.userInfo
 
-    private static func request(_ trigger: PlannedTrigger, content: UNMutableNotificationContent) -> UNNotificationRequest {
         var components = DateComponents()
-        components.hour = trigger.hour
-        components.minute = trigger.minute
-        components.weekday = trigger.weekday
+        components.hour = item.trigger.hour
+        components.minute = item.trigger.minute
+        components.weekday = item.trigger.weekday
         return UNNotificationRequest(
-            identifier: trigger.identifier,
+            identifier: item.trigger.identifier,
             content: content,
             trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
         )
