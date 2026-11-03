@@ -22,7 +22,8 @@ A personal native iOS app (Swift/SwiftUI) for tracking daily things (medication,
 ## Analysis setup
 ```powershell
 .\.venv\Scripts\Activate.ps1
-pip install -r analysisequirements.txt
+pip install -r analysis
+equirements.txt
 cd analysis
 jupyter lab starter.ipynb
 ```
