@@ -2,13 +2,6 @@ import SwiftUI
 import SwiftData
 import DayTrackerCore
 
-private extension View {
-    func card() -> some View {
-        padding()
-            .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
-    }
-}
-
 /// Water, coffee: big +1 button and today's total.
 struct CounterCard: View {
     let tracker: Tracker
@@ -66,14 +59,51 @@ struct CounterCard: View {
     private var entryCount: Int { entries.count }
 }
 
-/// Medicine: "Taken" button and today's intake times (D11, as-needed use).
+/// Medicine: today's reminder slots, as-needed intake, and a "Taken" button (D11).
 struct DoseCard: View {
     let tracker: Tracker
     let entries: [LogEntry]
+    let day: DateInterval
 
     @Environment(\.modelContext) private var context
 
     private var taken: [LogEntry] { entries.filter { $0.value >= 1 } }
+
+    /// Today's scheduled reminder times.
+    private var slots: [Date] {
+        tracker.reminderTimes
+            .flatMap { RecurringTime(time: $0).occurrences(in: day, calendar: .current) }
+            .sorted()
+    }
+
+    private func entry(for slot: Date) -> LogEntry? {
+        entries.first { $0.scheduledFor == slot }
+    }
+
+    /// "Taken" fills the latest unanswered past slot; otherwise it's as-needed.
+    private var openSlot: Date? {
+        let now = Date.now
+        return slots.last { $0 <= now && entry(for: $0) == nil }
+    }
+
+    private var slotSummary: String {
+        let now = Date.now
+        return slots.map { (slot: Date) -> String in
+            switch entry(for: slot)?.value {
+            case let value? where value >= 1: "\(slot.shortTime) ✓"
+            case .some: "\(slot.shortTime) ✕"
+            case nil: slot <= now ? "\(slot.shortTime) •" : slot.shortTime
+            }
+        }
+        .joined(separator: "   ")
+    }
+
+    private var intakeSummary: String {
+        let asNeeded = taken.filter { $0.scheduledFor == nil }
+        if asNeeded.isEmpty { return slots.isEmpty ? "Not taken today" : "" }
+        let times = asNeeded.map(\.occurredAt.shortTime).joined(separator: ", ")
+        return slots.isEmpty ? "Taken at \(times)" : "Also taken at \(times)"
+    }
 
     var body: some View {
         HStack(spacing: 14) {
@@ -84,16 +114,22 @@ struct DoseCard: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(tracker.name)
                     .font(.headline)
-                Text(taken.isEmpty
-                     ? "Not taken today"
-                     : "Taken at " + taken.map(\.occurredAt.shortTime).joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if !slots.isEmpty {
+                    Text(slotSummary)
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                let intake = intakeSummary
+                if !intake.isEmpty {
+                    Text(intake)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
             Spacer()
             Button("Taken") {
                 withAnimation {
-                    _ = EntryLogger.log(tracker, value: 1, in: context)
+                    DoseRecorder.record(tracker, taken: true, slot: openSlot, source: .manual, in: context)
                 }
             }
             .buttonStyle(.borderedProminent)

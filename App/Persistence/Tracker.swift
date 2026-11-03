@@ -18,6 +18,8 @@ final class Tracker {
     var sortOrder: Int = 0
     var archived: Bool = false
     var createdAt: Date = Date.now
+    /// For doses: daily reminder times as minutes since midnight (D11). Empty = as-needed only.
+    var reminderMinutes: [Int] = []
 
     @Relationship(deleteRule: .cascade, inverse: \LogEntry.tracker)
     var entries: [LogEntry] = []
@@ -37,6 +39,16 @@ final class Tracker {
 
     var kind: TrackerKind {
         TrackerKind(rawValue: kindRaw) ?? .counter
+    }
+
+    var reminderTimes: [ClockTime] {
+        reminderMinutes.sorted().map { ClockTime(minutesSinceMidnight: $0) }
+    }
+
+    static func find(id: UUID, in context: ModelContext) -> Tracker? {
+        var descriptor = FetchDescriptor<Tracker>(predicate: #Predicate { $0.id == id })
+        descriptor.fetchLimit = 1
+        return try? context.fetch(descriptor).first
     }
 
     var scaleRange: ClosedRange<Int> {

@@ -153,3 +153,16 @@ Simple charts in the app (Swift Charts) come later. Serious analysis stays in Py
 - Seeded trackers: Water, Coffee, one example "Medicine", Mood, Energy, Focus. Renaming and adding trackers come in Phase 4.
 - The stored model class is `LogEntry` (not `Entry`) to avoid confusion with SwiftUI's `@Entry` macro.
 - No `VersionedSchema` yet. SwiftData migrates additive changes (new optional fields) automatically. Introduce versioning before the first non-additive change.
+
+---
+
+## D16 — How check-ins and reminders behave
+**Status:** Accepted (2026-11-03)
+
+- **One session per occurrence.** A `CheckInSession` is identified by *schedule ID + scheduled time*. Repeating notifications don't carry a date, so the occurrence is worked out as "the latest scheduled time at or before delivery". Answers link to the session through `LogEntry.sessionID`, a plain UUID rather than a SwiftData relationship, which keeps exports simple.
+- **Answer window: 3 hours.** A check-in is *due* from its time until 3 h later. After that, an unanswered one becomes *missed*. That's filled in when the app opens, going back up to 14 days but never before the schedule was created or last edited. Missed check-ins can still be answered late. Statuses: pending, answered, partial, skipped (explicit "Skip check-in"), missed.
+- **Medicine slots.** Each reminder time is a daily slot. Taken/Skip from the notification records the entry with `scheduledFor = slot`; repeating the action updates the entry instead of duplicating it. **Taken** on the Today screen fills the latest unanswered past slot of the day, or counts as as-needed if there is none.
+- **Snooze** (15 min) re-delivers a one-off copy pinned to the original slot, so the answer still counts for, say, 08:00.
+- **Rebuild, don't patch.** All repeating requests are removed and re-added from the current settings on launch, on returning to the app, and after every settings change. Snoozes are kept. The total stays under iOS's 64-pending cap, with a little room left for snoozes.
+- **Permission** is requested from a banner on Today (and a Settings row), not by a system prompt at first launch.
+- Check-in notifications carry only *Snooze*. Ten mood buttons don't fit on a notification (D12), so tapping opens the check-in sheet.

@@ -45,7 +45,7 @@ daytracker/
 | loggedAt | Date (UTC) | when it was recorded |
 | timeZone | String | IANA id at logging time, so "time of day" analysis is correct when travelling |
 | source | enum | `manual`, `notificationAction`, `checkIn`, later `widget`, `shortcut` |
-| session | → CheckInSession? | set if answered as part of a check-in |
+| sessionID | UUID? | `CheckInSession.id` if answered as part of a check-in (D16) |
 | scheduledFor | Date? | for `dose`: the reminder slot this answers; nil = as-needed |
 | note | String? | |
 
@@ -68,8 +68,9 @@ This lets analysis measure response rate and latency, and separate "no coffee" f
 - Categories:
   - `DOSE`: **Taken** / **Skip** / **Snooze 15 min**. Handled in the background and written straight to SwiftData with `scheduledFor` set.
   - `CHECKIN`: tapping opens the check-in sheet with that schedule's questions (1–10 grids, D12).
-- When a scheduled time passes without an answer, a `missed` session is created lazily the next time the app opens.
-- Notification permission is requested on first schedule creation, not at first launch.
+- When a check-in's 3 h answer window passes without an answer, a `missed` session is created the next time the app opens (D16).
+- Notification permission is requested from a banner on the Today screen, not at first launch.
+- Code: `App/Notifications/` (scheduler, payload, handler); scheduling math in `DayTrackerCore` (`RecurringTime`, `NotificationPlanner`, `CheckInPolicy`).
 
 ## Export format (D09)
 

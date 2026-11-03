@@ -18,6 +18,8 @@ final class LogEntry {
     var note: String?
     /// For scheduled doses: the reminder slot this answers (D11). Nil = as-needed.
     var scheduledFor: Date?
+    /// Set when answered as part of a check-in (`CheckInSession.id`).
+    var sessionID: UUID?
 
     init(value: Double, occurredAt: Date, source: EntrySource, note: String?) {
         self.value = value
@@ -51,5 +53,21 @@ enum EntryLogger {
         context.insert(entry)
         entry.tracker = tracker
         return entry
+    }
+}
+
+@MainActor
+enum DoseRecorder {
+    /// Records taken/skipped. With a slot, updates that slot's entry instead of adding a second one.
+    static func record(_ tracker: Tracker, taken: Bool, slot: Date?, source: EntrySource, in context: ModelContext) {
+        let value: Double = taken ? 1 : 0
+        if let slot, let existing = tracker.entries.first(where: { $0.scheduledFor == slot }) {
+            existing.value = value
+            existing.occurredAt = .now
+            existing.sourceRaw = source.rawValue
+            return
+        }
+        let entry = EntryLogger.log(tracker, value: value, source: source, in: context)
+        entry.scheduledFor = slot
     }
 }

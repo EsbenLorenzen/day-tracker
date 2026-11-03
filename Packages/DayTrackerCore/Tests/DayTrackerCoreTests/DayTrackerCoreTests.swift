@@ -2,18 +2,6 @@ import Foundation
 import Testing
 @testable import DayTrackerCore
 
-private func calendar(_ identifier: String) throws -> Calendar {
-    var calendar = Calendar(identifier: .gregorian)
-    calendar.timeZone = try #require(TimeZone(identifier: identifier))
-    return calendar
-}
-
-private func date(
-    _ calendar: Calendar, _ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: Int = 0
-) throws -> Date {
-    try #require(calendar.date(from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)))
-}
-
 @Suite struct DayBoundaryTests {
     let boundary = DayBoundary(startHour: 4)
 

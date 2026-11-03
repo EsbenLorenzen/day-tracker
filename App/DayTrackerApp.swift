@@ -5,22 +5,16 @@ import UserNotifications
 @main
 struct DayTrackerApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    private let container: ModelContainer
 
     init() {
-        do {
-            container = try ModelContainer(for: Tracker.self, LogEntry.self)
-        } catch {
-            fatalError("Could not open the database: \(error)")
-        }
-        Seeder.seedIfNeeded(container.mainContext)
+        Seeder.seedIfNeeded(Persistence.container.mainContext)
     }
 
     var body: some Scene {
         WindowGroup {
             RootView()
         }
-        .modelContainer(container)
+        .modelContainer(Persistence.container)
     }
 }
 
@@ -30,6 +24,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
+        NotificationScheduler.registerCategories()
         return true
     }
 
@@ -39,5 +34,22 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .list, .sound]
+    }
+
+    // Taps and action buttons. May run with the app in the background (Taken / Skip / Snooze).
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        let content = response.notification.request.content
+        guard let payload = NotificationPayload(userInfo: content.userInfo) else { return }
+        let action = response.actionIdentifier
+        let slot = payload.slot(deliveredAt: response.notification.date)
+
+        if action == NotificationAction.snooze {
+            await NotificationScheduler.snooze(content, slot: slot)
+            return
+        }
+        await NotificationHandler.handle(action: action, payload: payload, slot: slot)
     }
 }

@@ -25,6 +25,8 @@ private struct TodayContent: View {
     @Query(filter: #Predicate<Tracker> { $0.archived == false }, sort: \Tracker.sortOrder)
     private var trackers: [Tracker]
     @Query private var entries: [LogEntry]
+    @Query private var schedules: [CheckInSchedule]
+    @Query private var sessions: [CheckInSession]
 
     init(day: DateInterval) {
         self.day = day
@@ -34,6 +36,7 @@ private struct TodayContent: View {
             filter: #Predicate<LogEntry> { $0.occurredAt >= start && $0.occurredAt < end },
             sort: \LogEntry.occurredAt
         )
+        _sessions = Query(filter: #Predicate<CheckInSession> { $0.scheduledFor >= start && $0.scheduledFor < end })
     }
 
     var body: some View {
@@ -49,6 +52,14 @@ private struct TodayContent: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
+                ReminderPermissionBanner()
+
+                if schedules.contains(where: \.enabled) {
+                    TodaySection(title: "Check-ins") {
+                        TodayCheckIns(day: day, schedules: schedules, sessions: sessions)
+                    }
+                }
+
                 if !counters.isEmpty {
                     TodaySection(title: "Intake") {
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
@@ -60,7 +71,7 @@ private struct TodayContent: View {
 
                 if !doses.isEmpty {
                     TodaySection(title: "Medicine") {
-                        ForEach(doses) { DoseCard(tracker: $0, entries: todays($0)) }
+                        ForEach(doses) { DoseCard(tracker: $0, entries: todays($0), day: day) }
                     }
                 }
 

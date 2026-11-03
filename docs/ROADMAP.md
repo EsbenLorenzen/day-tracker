@@ -26,17 +26,20 @@ The biggest risk is building and installing an iOS app with no Mac. Retire it fi
 - [x] CI: `DayTrackerCore` tests on Linux (day boundary incl. DST, aggregation, formatting, default trackers)
 - [x] Decide D10 → core package accepted; no Swift-on-Windows for now
 - [x] Green CI run for Phase 1 (2026-11-02)
-- [ ] Try it on the phone (with the deferred Phase 0 sideload)
+- [x] Try it on the phone (with the deferred Phase 0 sideload), 2026-11-03: everything works
 
 **Done when:** you can log your whole day by hand for a week.
 
 ## Phase 2: Scheduled check-ins
-- [ ] `CheckInSchedule` + `CheckInSession` models; defaults 09:00 / 14:00 / 21:00 asking Mood, Energy, Focus
-- [ ] Settings UI to change times, weekdays and questions, and add/remove check-ins
-- [ ] Local notification scheduling (repeating calendar triggers)
-- [ ] Check-in sheet opened from a notification tap
-- [ ] Medicine reminder times per medicine; notifications with **Taken / Skip / Snooze** actions (no app open needed)
-- [ ] Missed / partial session tracking
+- [x] `CheckInSchedule` + `CheckInSession` models; defaults 09:00 / 14:00 / 21:00 asking Mood, Energy, Focus
+- [x] Settings UI to change times, weekdays and questions, and add/remove check-ins
+- [x] Local notification scheduling (repeating calendar triggers; rebuilt on launch, return and every settings change)
+- [x] Check-in sheet opened from a notification tap, or from the Today screen's check-in list
+- [x] Medicine reminder times per medicine; notifications with **Taken / Skip / Snooze** actions (no app open needed)
+- [x] Missed / partial session tracking (D16)
+- [x] Permission asked from a Today banner, not at first launch
+- [ ] Green CI run for Phase 2
+- [ ] On the phone: allow reminders; a check-in notification opens the questions; Taken/Skip from the lock screen; Snooze returns after 15 min
 
 **Done when:** the phone asks you 2–3 times a day and answering takes under 10 seconds.
 
