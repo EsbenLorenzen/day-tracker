@@ -72,7 +72,7 @@ Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing beca
 - [x] Today shows numbers and notes; new trackers can be check-in questions
 - [x] Simple in-app charts (Swift Charts): Trends tab with 7- and 30-day views
 - [x] App icon (`tools/make_icon.py`); haptics already in place; dark mode uses system colours throughout; one-column counters at accessibility text sizes
-- [ ] Green CI run for Phase 4
+- [x] Green CI run for Phase 4 (2026-11-05)
 - [ ] On the phone: icon shows; add a tracker of each kind; Trends with a few days of data; try dark mode and the largest text size
 - [ ] **Decision point:** join the Apple Developer Program → signed CI builds → TestFlight (ends the 7-day expiry). Write-up in D19
 
