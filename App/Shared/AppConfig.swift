@@ -23,6 +23,13 @@ enum TrackerPalette {
                                 "bandage.fill", "drop.fill", "heart.fill", "leaf.fill",
                                 "sun.max.fill", "moon.fill", "bolt.fill", "staroflife.fill"]
 
+    static let generalIcons = ["drop.fill", "cup.and.saucer.fill", "wineglass.fill", "mug.fill",
+                               "fork.knife", "carrot.fill", "figure.walk", "dumbbell.fill",
+                               "bed.double.fill", "brain.head.profile", "face.smiling", "bolt.fill",
+                               "scope", "heart.fill", "waveform.path.ecg", "lungs.fill",
+                               "sun.max.fill", "moon.fill", "cloud.rain.fill", "flame.fill",
+                               "book.fill", "pencil", "star.fill", "scalemass.fill"]
+
     static func color(named name: String) -> Color {
         switch name {
         case "blue": .blue

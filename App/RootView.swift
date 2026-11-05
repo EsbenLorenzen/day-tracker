@@ -14,6 +14,9 @@ struct RootView: View {
             Tab("History", systemImage: "list.bullet") {
                 HistoryView()
             }
+            Tab("Trends", systemImage: "chart.xyaxis.line") {
+                TrendsView()
+            }
             Tab("Settings", systemImage: "gear") {
                 SettingsView()
             }

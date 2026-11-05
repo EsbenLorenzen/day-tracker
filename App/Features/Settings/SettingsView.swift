@@ -16,6 +16,18 @@ struct SettingsView: View {
 
                 MedicinesSection()
 
+                Section {
+                    NavigationLink {
+                        TrackersView()
+                    } label: {
+                        Label("Counters, ratings, numbers, notes", systemImage: "slider.horizontal.3")
+                    }
+                } header: {
+                    Text("Trackers")
+                } footer: {
+                    Text("Add your own, e.g. stress, alcohol, steps or a journal line. They show up on Today, in Trends and as check-in questions.")
+                }
+
                 DataSection()
 
                 Section {

@@ -19,6 +19,8 @@ struct ScaleGrid: View {
                     } label: {
                         Text("\(number)")
                             .font(.title2.bold())
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
                             .frame(maxWidth: .infinity, minHeight: 56)
                             .foregroundStyle(isSelected ? Color.white : Color.primary)
                             .background(isSelected ? color : color.opacity(0.18), in: .rect(cornerRadius: 12))

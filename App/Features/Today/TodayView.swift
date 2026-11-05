@@ -25,6 +25,7 @@ private struct TodayContent: View {
     @Query(filter: #Predicate<Tracker> { $0.archived == false }, sort: \Tracker.sortOrder)
     private var trackers: [Tracker]
     @Query private var entries: [LogEntry]
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query private var schedules: [CheckInSchedule]
     @Query private var sessions: [CheckInSession]
 
@@ -45,6 +46,9 @@ private struct TodayContent: View {
         let counters = trackers.filter { $0.kind == .counter }
         let doses = trackers.filter { $0.kind == .dose }
         let scales = trackers.filter { $0.kind == .scale }
+        let others = trackers.filter { $0.kind == .number || $0.kind == .note }
+        // One column of counter cards at accessibility text sizes, so labels don't truncate.
+        let counterColumns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
 
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
@@ -62,7 +66,7 @@ private struct TodayContent: View {
 
                 if !counters.isEmpty {
                     TodaySection(title: "Intake") {
-                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: counterColumns),
                                   spacing: 12) {
                             ForEach(counters) { CounterCard(tracker: $0, entries: todays($0)) }
                         }
@@ -78,6 +82,12 @@ private struct TodayContent: View {
                 if !scales.isEmpty {
                     TodaySection(title: "How are you?") {
                         ForEach(scales) { ScaleCard(tracker: $0, entries: todays($0)) }
+                    }
+                }
+
+                if !others.isEmpty {
+                    TodaySection(title: "More") {
+                        ForEach(others) { ValueCard(tracker: $0, entries: todays($0)) }
                     }
                 }
             }

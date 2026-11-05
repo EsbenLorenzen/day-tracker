@@ -207,3 +207,130 @@ struct ScaleCard: View {
         }
     }
 }
+
+/// Numbers (weight, steps) and notes: latest value today; tap to add one.
+struct ValueCard: View {
+    let tracker: Tracker
+    let entries: [LogEntry]
+
+    @Environment(\.modelContext) private var context
+    @State private var isAdding = false
+
+    private var subtitle: String {
+        guard let latest = entries.last else {
+            return tracker.kind == .note ? "No note today" : "Nothing yet today"
+        }
+        if tracker.kind == .note {
+            let count = entries.count
+            return count == 1 ? "1 note today · \(latest.occurredAt.shortTime)"
+                              : "\(count) notes today · last \(latest.occurredAt.shortTime)"
+        }
+        return "\(tracker.format(latest.value)) at \(latest.occurredAt.shortTime)"
+    }
+
+    var body: some View {
+        Button {
+            isAdding = true
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: tracker.icon)
+                    .font(.title2)
+                    .foregroundStyle(tracker.color)
+                    .frame(width: 32)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(tracker.name)
+                        .font(.headline)
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+                Spacer()
+                Image(systemName: "plus.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(tracker.color)
+            }
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .card()
+        .contextMenu {
+            if let last = entries.last {
+                Button("Undo last (\(last.occurredAt.shortTime))", systemImage: "arrow.uturn.backward",
+                       role: .destructive) {
+                    withAnimation { context.delete(last) }
+                }
+            }
+        }
+        .sheet(isPresented: $isAdding) {
+            ValueEntrySheet(tracker: tracker, initialValue: entries.last?.value)
+                .presentationDetents([.medium])
+        }
+    }
+}
+
+/// Enter a number or write a note.
+private struct ValueEntrySheet: View {
+    let tracker: Tracker
+    let initialValue: Double?
+
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+    @State private var value: Double?
+    @State private var note = ""
+    @FocusState private var focused: Bool
+
+    private var canSave: Bool {
+        tracker.kind == .note
+            ? !note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            : value != nil
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                if tracker.kind == .number {
+                    Section {
+                        TextField("Value", value: $value, format: .number)
+                            .keyboardType(.decimalPad)
+                            .font(.title2)
+                            .focused($focused)
+                    } footer: {
+                        if let unit = tracker.unit { Text(unit) }
+                    }
+                    Section {
+                        TextField("Note (optional)", text: $note, axis: .vertical)
+                    }
+                } else {
+                    Section {
+                        TextField("Write a note", text: $note, axis: .vertical)
+                            .lineLimit(3...8)
+                            .focused($focused)
+                    }
+                }
+            }
+            .navigationTitle(tracker.name)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save)
+                        .disabled(!canSave)
+                }
+            }
+            .onAppear {
+                if tracker.kind == .number { value = initialValue }
+                focused = true
+            }
+        }
+    }
+
+    private func save() {
+        let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
+        EntryLogger.log(tracker, value: value ?? 0, note: trimmed.isEmpty ? nil : trimmed, in: context)
+        try? context.save()
+        dismiss()
+    }
+}

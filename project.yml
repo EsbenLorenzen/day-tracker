@@ -29,6 +29,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.esbenlorenzen.daytracker
         TARGETED_DEVICE_FAMILY: "1"  # iPhone only
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: DayTracker
         INFOPLIST_KEY_UILaunchScreen_Generation: YES

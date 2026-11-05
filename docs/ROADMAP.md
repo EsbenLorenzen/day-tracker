@@ -68,10 +68,13 @@ Requested 2026-11-03. Pulled forward from Phase 4's general tracker editing beca
 **Done when:** a week of real data turns into charts on the PC.
 
 ## Phase 4: Daily-driver polish
-- [ ] Add, edit and archive other trackers in the app (no code changes needed): new 1–10 states like stress, new counters (medicines come earlier, Phase 2.5)
-- [ ] Simple in-app charts (Swift Charts): 7- and 30-day trends
-- [ ] App icon, haptics, dark mode check, accessibility (Dynamic Type)
-- [ ] **Decision point:** join the Apple Developer Program → signed CI builds → TestFlight (ends the 7-day expiry)
+- [x] Add, edit and archive other trackers in the app: counters, 1–10 ratings, numbers, notes (D18; medicines came earlier in Phase 2.5)
+- [x] Today shows numbers and notes; new trackers can be check-in questions
+- [x] Simple in-app charts (Swift Charts): Trends tab with 7- and 30-day views
+- [x] App icon (`tools/make_icon.py`); haptics already in place; dark mode uses system colours throughout; one-column counters at accessibility text sizes
+- [ ] Green CI run for Phase 4
+- [ ] On the phone: icon shows; add a tracker of each kind; Trends with a few days of data; try dark mode and the largest text size
+- [ ] **Decision point:** join the Apple Developer Program → signed CI builds → TestFlight (ends the 7-day expiry). Write-up in D19
 
 ## Phase 5: Native extras (paid account)
 - [ ] Interactive home/lock-screen widget (log water/coffee without opening the app)

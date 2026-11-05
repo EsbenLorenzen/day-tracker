@@ -88,9 +88,10 @@ The exact format is pinned by `Packages/DayTrackerCore/Tests/DayTrackerCoreTests
 
 Code: `DayTrackerCore` (`Backup`, `Exporter`, `StoredZip`); app `App/Data/` (model ↔ record mapping, import merge); `analysis/daytracker.py`.
 
-## Screens (MVP)
+## Screens
 
-1. **Today**: big tap targets for quick logs (+1 water, +1 coffee, meds taken ✓), today's totals, and the next check-in.
-2. **Check-in sheet**: steps through the scheduled trackers (default: Mood, Energy, Focus). Scales are a 2×5 grid of 1–10 buttons, not sliders, so answers are fast and unambiguous.
-3. **History**: entries by day; edit or delete; backfill.
-4. **Settings**: manage trackers, check-in schedules, export/import.
+1. **Today**: check-ins due, quick logging per kind (counter cards, medicine cards with reminder slots, 1–10 ratings, numbers and notes), notification permission banner.
+2. **Check-in sheet**: steps through a check-in's questions. Ratings are a grid of buttons, not sliders, so answers are fast and unambiguous.
+3. **History**: entries by day; edit, delete, backfill.
+4. **Trends**: 7/30-day chart per tracker (D18).
+5. **Settings**: reminders, check-ins, medicines, trackers, data export/import, troubleshooting.
