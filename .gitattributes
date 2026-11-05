@@ -2,3 +2,5 @@
 * text=auto eol=lf
 *.png binary
 *.jpg binary
+# Commit notebooks without outputs (they contain personal data); see tools/strip_notebook_output.py
+*.ipynb filter=nbstrip

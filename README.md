@@ -31,3 +31,10 @@ jupyter lab starter.ipynb
 3. Run the notebook; `daytracker.load()` picks the newest export. Format details: [ARCHITECTURE.md](docs/ARCHITECTURE.md#export-format-d09-d17).
 
 Tests: `python -m pytest analysis`.
+
+Notebook outputs contain your data and the repo is public, so outputs are stripped on commit by a git filter. Set it up once per clone:
+```powershell
+git config filter.nbstrip.clean ".venv/Scripts/python.exe tools/strip_notebook_output.py"
+git config filter.nbstrip.smudge cat
+git config filter.nbstrip.required true
+```
